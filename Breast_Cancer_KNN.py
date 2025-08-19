@@ -19,15 +19,19 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+def trainModel(k):
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    return accuracy
+
 # List to store accuracy values for different k
 accuracy_values = []
 
-for k in range(1, 21):
-    knn = KNeighborsClassifier(n_neighbors=k)  # Create KNN model
-    knn.fit(X_train, y_train)  # Train the model on training data
-    y_pred = knn.predict(X_test)  # Predict on test data
-    accuracy = accuracy_score(y_test, y_pred)  # Calculate accuracy
-    accuracy_values.append(accuracy)  # Append accuracy to the list
+for k in range(1, 21): #find the highest accuracy
+
+    accuracy_values.append(trainModel(k))  # Append accuracy to the list
 
 
 # Find the highest accuracy and corresponding k value
@@ -36,10 +40,7 @@ best_k = accuracy_values.index(best_value) + 1  # Add 1 because list index start
 
 
 # Train the model again with the best k
-knn = KNeighborsClassifier(n_neighbors=best_k)
-knn.fit(X_train, y_train)
-y_pred = knn.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
+final_accuracy = trainModel(best_k)
 
 
 
